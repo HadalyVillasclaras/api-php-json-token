@@ -7,7 +7,7 @@
   <li>HTTP status codes</li>
   <li>Headers</li>
   <li>Error & exception handlers</li>
-  <li>Access Token & API key</li>  
+  <li>Authentication Token & API key</li>  
 </ul>
 
 <p>Using Postman and Curl</p>
