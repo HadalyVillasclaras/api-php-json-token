@@ -9,7 +9,7 @@ class UserGateway
         $this->conn = $database->getConnection();
     }
 
-    public function getByAPIKey(string $key)//: array | false
+    public function getByAPIKey(string $key)
     {
         $sql = "SELECT *
                 FROM user
@@ -24,7 +24,7 @@ class UserGateway
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getByUsername(string $username)//: array | false
+    public function getByUsername(string $username)
     {
         $sql = "SELECT *
                 FROM user
