@@ -1,5 +1,4 @@
 <?php
-// curl -v http://localhost/my_api/tasks
 
 declare(strict_types=1);
 
@@ -24,8 +23,6 @@ if ($resource != "tasks") {
 
 // $routing = new Routing();
 
-
-
 $database =  new Database($_ENV["DB_HOST"], 
                         $_ENV["DB_NAME"], 
                         $_ENV["DB_USER"], 
@@ -43,9 +40,6 @@ if (!$auth->authenticateAccessToken()) {
 // if (!$auth->authenticateAPIKey()) {
 //     exit;
 // }
-
-echo "valid authentication";
-exit;
 
 $userId = $auth->getUserId();
 
