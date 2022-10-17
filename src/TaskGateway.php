@@ -32,7 +32,7 @@ class TaskGateway
         return $data;
     }
 
-    public function getByUserId(int $userId, string $id)//: array | false
+    public function getByUserId(int $userId, string $id)
     {
         $sql = "SELECT *
                 FROM task
@@ -45,7 +45,7 @@ class TaskGateway
         $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
 
         $stmt->execute();
-        $data = $stmt->fetch(PDO::FETCH_ASSOC); //array or false if failure
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if($data !== false) {
             $data['is_completed'] = (bool) $data['is_completed'];
