@@ -5,8 +5,7 @@ declare(strict_types=1);
 require __DIR__ . "/bootstrap.php";
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-
-    http_response_code(405);
+    http_response_code(405); //method not allowed
     header("Allow: POST");
     exit;
 }
@@ -17,10 +16,11 @@ if (!array_key_exists("username", $data) ||
     !array_key_exists("password", $data)) {
 
         http_response_code(400);
-        echo json_encode(["message" => "missing login credentials"]);
+        echo json_encode(["message" => "Please, introduce login credentials"]);
         exit;
 }
 
+//Authenticate
 $database =  new Database($_ENV["DB_HOST"], 
                         $_ENV["DB_NAME"], 
                         $_ENV["DB_USER"], 
@@ -31,25 +31,28 @@ $userGateway = new UserGateway($database);
 $user = $userGateway->getByUsername($data["username"]);
 
 if ($user === false) {
-
     http_response_code(401);
-    echo json_encode(["message" => "invalid authentication"]);
+    echo json_encode(["message" => "Invalid authentication"]);
     exit;
 }
 
 if (!password_verify($data["password"], $user["password_hash"])) {
-
     http_response_code(401);
-    echo json_encode(["message" => "invalid authentication"]);
+    echo json_encode(["message" => "Invalid authentication"]);
     exit;
 }
 
+//Generate access token
 $payload = [
-    "id" => $user["id"],
+    "sub" => $user["id"],
     "name" => $user["username"]
 ]; 
 
-$accessToken = base64_encode(json_encode($payload));
+// $accessToken = base64_encode(json_encode($payload));
+
+//JWT token
+$codec = new JWTCodec($_ENV["SECRET_KEY"]);
+$accessToken = $codec->encode($payload);
 
 echo json_encode([
     "access_token" => $accessToken
