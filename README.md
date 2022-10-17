@@ -10,4 +10,3 @@
   <li>Authentication Token & API key</li>  
 </ul>
 
-<p>Using Postman and Curl</p>
