@@ -30,8 +30,8 @@ class Database
 
             $this->conn = new PDO($dsn, $this->user, $this->password, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_EMULATE_PREPARES => false, //deshabilita la emulacion de sentencias preparadas
-                PDO::ATTR_STRINGIFY_FETCHES => false //convierte todos los valores a strings x defecto (si true)
+                PDO::ATTR_EMULATE_PREPARES => false,
+                PDO::ATTR_STRINGIFY_FETCHES => false
             ]);
         }
 
