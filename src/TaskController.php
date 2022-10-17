@@ -5,8 +5,7 @@ class TaskController
     private $gateway;
     private $userId;
 
-    public function __construct(/*private*/ TaskGateway $gateway,
-                                /*private*/ int $userId)
+    public function __construct(TaskGateway $gateway, int $userId)
     {
         $this->gateway = $gateway;
         $this->userId = $userId;
@@ -21,8 +20,7 @@ class TaskController
 
             } elseif ($method == "POST") {
 
-                $data = (array) json_decode(file_get_contents("php://input"), true); //si es null, deja de ser array. con(array) forzamos a que sea array siempre
-                //var_dump($data); //si recibe un   diferente a json, print null
+                $data = (array) json_decode(file_get_contents("php://input"), true);
 
                 $errors = $this->getValidationErrors($data);
 
