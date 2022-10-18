@@ -1,0 +1,5 @@
+.env
+notas
+vendor/
+*.html
+register.php
