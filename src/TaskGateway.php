@@ -2,11 +2,11 @@
 
 class TaskGateway
 {
-    public PDO $conn;
+    private PDO $connection;
 
-    public function __construct(Database $database)
+    public function __construct()
     {
-        $this->conn = $database->getConnection();
+        $this->connection = (new Database())->getConnection();
     }
 
     public function getAllByUserId(int $userId): array
@@ -15,7 +15,7 @@ class TaskGateway
                 FROM task
                 WHERE user_id = :userId";
 
-        $stmt = $this->conn->prepare($sql);
+        $stmt = $this->connection->prepare($sql);
 
         $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
 
@@ -32,20 +32,20 @@ class TaskGateway
         return $data;
     }
 
-    public function getByUserId(int $userId, string $id)
+    public function getByUserId(int $userId, string $id)//: array | false
     {
         $sql = "SELECT *
                 FROM task
                 WHERE id = :id
                 AND user_id = :userId";
         
-        $stmt = $this->conn->prepare($sql);
+        $stmt = $this->connection->prepare($sql);
 
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
 
         $stmt->execute();
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC); //array or false if failure
 
         if($data !== false) {
             $data['is_completed'] = (bool) $data['is_completed'];
@@ -59,7 +59,7 @@ class TaskGateway
         $sql = "INSERT INTO task (name, priority, is_completed, user_id)
                 VALUES (:name, :priority, :is_completed, :userId)";
         
-        $stmt = $this->conn->prepare($sql);
+        $stmt = $this->connection->prepare($sql);
 
         $stmt->bindValue(":name", $data["name"], PDO::PARAM_STR);
 
@@ -78,7 +78,7 @@ class TaskGateway
 
         $stmt->execute();
 
-        return $this->conn->lastInsertId();
+        return $this->connection->lastInsertId();
     }
 
     public function updateByUserId(int $userId, string $id, array $data): int
@@ -125,7 +125,7 @@ class TaskGateway
                 . " WHERE id = :id"
                 . "AND user_id = :userId";
 
-            $stmt = $this->conn->prepare($sql);
+            $stmt = $this->connection->prepare($sql);
 
             $stmt->bindValue(":id", $id, PDO::PARAM_INT);
             $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
@@ -147,7 +147,7 @@ class TaskGateway
                 WHERE id = :id
                 AND user_id = :userId";
         
-        $stmt = $this->conn->prepare($sql);
+        $stmt = $this->connection->prepare($sql);
 
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
