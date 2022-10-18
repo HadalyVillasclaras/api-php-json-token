@@ -1,40 +1,38 @@
 <?php
-
+ 
 class Database
 {
-    private $host;
-    private $name;
-    private $user;
-    private $password;
-
-    private ?PDO $conn = null;
+    private string $host;
+    private string $name;
+    private string $user;
+    private string $password;
+    private ?PDO $connection = null;
 
     public function __construct(
-        //private string $host
-        string $host,
-        string $name,
-        string $user,
-        string $password
     ) {
-
-        $this->host = $host;
-        $this->name = $name;
-        $this->user = $user;
-        $this->password = $password;
+        $this->host = $_ENV["DB_HOST"];
+        $this->name = $_ENV["DB_NAME"];
+        $this->user = $_ENV["DB_USER"];
+        $this->password = $_ENV["DB_PASS"];
     }
 
     public function getConnection(): PDO
     {
-        if ($this->conn === null) {
-            $dsn = "mysql:host={$this->host};dbname={$this->name};charset=utf8";
+        try {
+            if ($this->connection === null) {
+                $dsn = "mysql:host={$this->host};dbname={$this->name};charset=utf8";
+    
+                $this->connection = new PDO($dsn, $this->user, $this->password, [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_EMULATE_PREPARES => false, 
+                    PDO::ATTR_STRINGIFY_FETCHES => false
+                ]);
+            }
+    
+            return $this->connection;
 
-            $this->conn = new PDO($dsn, $this->user, $this->password, [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_EMULATE_PREPARES => false,
-                PDO::ATTR_STRINGIFY_FETCHES => false
-            ]);
+        } catch (PDOException $e) {
+            echo json_encode(["message" => $e->getMessage()]); 
         }
-
-        return $this->conn;
     }
 }
