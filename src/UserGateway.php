@@ -2,11 +2,11 @@
 
 class UserGateway
 {
-    public PDO $conn;
+    private PDO $connection;
 
-    public function __construct(Database $database)
+    public function __construct()
     {
-        $this->conn = $database->getConnection();
+        $this->connection = (new Database())->getConnection();
     }
 
     public function getByAPIKey(string $key)
@@ -15,7 +15,7 @@ class UserGateway
                 FROM user
                 WHERE api_key = :api_key";
 
-        $stmt = $this->conn->prepare($sql);
+        $stmt = $this->connection->prepare($sql);
 
         $stmt->bindValue(":api_key", $key, PDO::PARAM_STR);
 
@@ -30,7 +30,7 @@ class UserGateway
                 FROM user
                 WHERE username = :username";
 
-        $stmt = $this->conn->prepare($sql);
+        $stmt = $this->connection->prepare($sql);
 
         $stmt->bindValue(":username", $username, PDO::PARAM_STR);
 
