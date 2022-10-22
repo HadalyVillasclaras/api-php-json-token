@@ -1,10 +1,11 @@
 {
     "autoload": {
         "psr-4": {
-            "": "src/"
+            "App\\": "src/"
         }
     },
     "require": {
-        "vlucas/phpdotenv": "^5.4"
+        "vlucas/phpdotenv": "^5.4",
+        "nikic/fast-route": "^1.3"
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Authentication methods:
  * - API key
@@ -7,8 +6,11 @@
  * - JWT token
 */
 
-use Exceptions\InvalidSignatureException;
-use Exceptions\TokenExpiredException;
+namespace App;
+
+use App\Exceptions\InvalidSignatureException;
+use App\Exceptions\TokenExpiredException;
+use Exception;
 
 class Authentication
 {
@@ -17,8 +19,8 @@ class Authentication
 
     private int $userId;
 
-    public function __construct(UserGateway $userGateway,
-                                JWTCodec $codec)
+    public function __construct(/*private*/ UserGateway $userGateway,
+                                            JWTCodec $codec)
     {
         $this->userGateway = $userGateway;
         $this->codec = $codec;

@@ -1,5 +1,10 @@
 <?php
 
+namespace App;
+
+use App\Shared\Infrastructure\Database\Database;
+use PDO;
+
 class UserGateway
 {
     private PDO $connection;
@@ -9,7 +14,7 @@ class UserGateway
         $this->connection = (new Database())->getConnection();
     }
 
-    public function getByAPIKey(string $key)
+    public function getByAPIKey(string $key)//: array | false
     {
         $sql = "SELECT *
                 FROM user
@@ -24,18 +29,20 @@ class UserGateway
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getByUsername(string $username)
+
+
+    public function getByID(int $id) /*array | false*/
     {
-        $sql = "SELECT *
+        $sql = "SELECT * 
                 FROM user
-                WHERE username = :username";
+                WHERE id = :id";
 
         $stmt = $this->connection->prepare($sql);
 
-        $stmt->bindValue(":username", $username, PDO::PARAM_STR);
+        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
 
         $stmt->execute();
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch(PDO::FETCH_ASSOC);        
     }
 }

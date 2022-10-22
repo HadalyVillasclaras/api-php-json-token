@@ -1,7 +1,10 @@
 <?php
 
-use Exceptions\InvalidSignatureException;
-use Exceptions\TokenExpiredException;
+namespace App;
+
+use App\Exceptions\InvalidSignatureException;
+use App\Exceptions\TokenExpiredException;
+use InvalidArgumentException;
 
 class JWTCodec
 {
@@ -65,6 +68,7 @@ class JWTCodec
         return $payload;
     }
 
+    //php no tiene un método para codficar url en base64
     private function base64UrlEncode(string $text): string
     {
         $encodedText = base64_encode($text);
