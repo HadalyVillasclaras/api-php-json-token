@@ -4,7 +4,7 @@ namespace App\Task\Application;
 
 class GetAllTasksDTO
 {
-    private $userId;
+    private int $userId;
 
     public function __construct(int $userId)
     {
