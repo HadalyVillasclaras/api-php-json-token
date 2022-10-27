@@ -10,3 +10,5 @@
   <li>Authentication Token & API key</li>  
 </ul>
 
+<p>Currently I'm structuring the api following DDD and hexagonal architecture (work in progress)</p>
+
