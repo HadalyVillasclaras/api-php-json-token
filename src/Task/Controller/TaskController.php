@@ -12,6 +12,7 @@ use App\Task\Application\GetAllTasksService;
 use App\Task\Application\GetTaskDTO;
 use App\Task\Application\GetTaskService;
 use App\Task\Infrastructure\TaskRepository;
+use Exception;
 
 class TaskController
 {
@@ -32,46 +33,62 @@ class TaskController
     {
         $taskRepository = new TaskRepository();
 
-        $getAllTasksDTO = new GetAllTasksDTO($this->userId);
+        try {
+            $getAllTasksDTO = new GetAllTasksDTO($this->userId);
 
-        $getAllTasksService = new GetAllTasksService($taskRepository);
-        $serviceResponse = $getAllTasksService->execute($getAllTasksDTO);
-
-        echo json_encode($serviceResponse);
+            $getAllTasksService = new GetAllTasksService($taskRepository);
+            $serviceResponse = $getAllTasksService->execute($getAllTasksDTO);
+    
+            echo json_encode($serviceResponse);
+        } catch (Exception $e) {
+            http_response_code($e->getCode());
+            echo json_encode(["message" => $e->getMessage()]);
+        }
     }
 
     public function getByUserId(int $taskId)
     {
-        $taskRepository = new TaskRepository();
+        try {
+            $taskRepository = new TaskRepository();
 
-        $getTaskDTO = new GetTaskDTO($this->userId, $taskId);
+            $getTaskDTO = new GetTaskDTO($this->userId, $taskId);
 
-        $getTaskService = new GetTaskService($taskRepository);
-        $serviceResponse = $getTaskService->execute($getTaskDTO);
+            $getTaskService = new GetTaskService($taskRepository);
+            $serviceResponse = $getTaskService->execute($getTaskDTO);
 
-        echo json_encode($serviceResponse);
+            echo json_encode($serviceResponse);
+        } catch (Exception $e) {
+            http_response_code($e->getCode());
+            echo json_encode(["message" => $e->getMessage()]);
+        }
     }
 
     public function addByUserId()
     {
         $taskRepository = new TaskRepository();
 
-        $data = (array) json_decode(file_get_contents("php://input"), true); 
+        try {
+            $data = (array) json_decode(file_get_contents("php://input"), true); 
 
-        $addTaskParams = [];
-        $addTaskParams['name'] = $data['name'];
-        $addTaskParams['priority'] = $data['priority'];
-        $addTaskParams['is_completed'] = $data['is_completed'];
+            $addTaskParams = [];
+            $addTaskParams['name'] = $data['name'];
+            $addTaskParams['priority'] = $data['priority'];
+            $addTaskParams['is_completed'] = $data['is_completed'];
+    
+            $addTaskRequest = new AddTaskDTO(
+                $addTaskParams['name'],
+                $addTaskParams['priority'],
+                $addTaskParams['is_completed'],
+                $this->userId
+            );
+    
+            $addTaskService = new AddTaskService($taskRepository);
+            $serviceResponse = $addTaskService->execute($addTaskRequest);
+        } catch (Exception $e) {
+            http_response_code($e->getCode());
+            echo json_encode(["message" => $e->getMessage()]);
+        }
 
-        $addTaskRequest = new AddTaskDTO(
-            $addTaskParams['name'],
-            $addTaskParams['priority'],
-            $addTaskParams['is_completed'],
-            $this->userId
-        );
-
-        $addTaskService = new AddTaskService($taskRepository);
-        $serviceResponse = $addTaskService->execute($addTaskRequest);
 
         // $errors = $this->getValidationErrors($data);
 
@@ -88,34 +105,44 @@ class TaskController
 
     public function updateByUserId(int $id)
     {
-        $data = (array) json_decode(file_get_contents("php://input"), true); 
+
+        try {
+            $data = (array) json_decode(file_get_contents("php://input"), true); 
     
-        $errors = $this->getValidationErrors($data, false);
-
-        if (!empty($errors)) {
-
-            $this->respondUnprocessableEntity($errors);
-            return;
+            $errors = $this->getValidationErrors($data, false);
+    
+            if (!empty($errors)) {
+    
+                $this->respondUnprocessableEntity($errors);
+                return;
+            }
+        } catch (Exception $e) {
+            http_response_code($e->getCode());
+            echo json_encode(["message" => $e->getMessage()]);
         }
-        
+
         // $rows = $this->gateway->updateByUserId($this->userId, $id, $data);
         // echo json_encode(["message" => "Task updated", "rows" => $rows]);
     }
 
     public function deleteByUserId(int $taskId)
     { 
-        $taskRepository = new TaskRepository();
+        try {
+            $taskRepository = new TaskRepository();
 
-        $deleteTaskDTO = new DeleteTaskDTO($this->userId, $taskId);
-
-        $deleteTaskService = new DeleteTaskService($taskRepository);
-        $serviceResponse = $deleteTaskService->execute($deleteTaskDTO);
-
-        echo json_encode($serviceResponse);
-
-        echo json_encode(["message" => "Task deleted"]);
+            $deleteTaskDTO = new DeleteTaskDTO($this->userId, $taskId);
+    
+            $deleteTaskService = new DeleteTaskService($taskRepository);
+            $serviceResponse = $deleteTaskService->execute($deleteTaskDTO);
+    
+            echo json_encode($serviceResponse);
+    
+            echo json_encode(["message" => "Task deleted"]);
+        } catch (Exception $e) {
+            http_response_code($e->getCode());
+            echo json_encode(["message" => $e->getMessage()]);
+        }
     }
-
 
 
     private function respondUnprocessableEntity(array $errors): void
