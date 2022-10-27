@@ -4,10 +4,10 @@ namespace App\Task\Application;
 
 class AddTaskDTO
 {
-    private $taskName;
-    private $priority;
-    private $isCompleted;
-    private $userId;
+    private string $taskName;
+    private int $priority;
+    private bool $isCompleted;
+    private int $userId;
 
     public function __construct(
         string $taskName,
