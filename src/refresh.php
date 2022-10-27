@@ -1,10 +1,10 @@
 <?php
-//cap. 60. el login no es restful, se puede convertir pasandole las cosas en el front (ver video)
+
 declare(strict_types=1);
 
 use App\JWTCodec;
 use App\RefreshTokenGateway;
-use App\UserGateway;
+use App\User\Infrastructure\UserRepository;
 
 require __DIR__ . "/bootstrap.php";
 
@@ -21,6 +21,7 @@ if (!array_key_exists("token", $data)) {
         echo json_encode(["message" => "missing token"]);
         exit;
 }
+
 
 $codec = new JWTCodec();
 
@@ -44,8 +45,8 @@ if ($refreshToken === false) {
     exit;
 }
 
-$userGateway = new UserGateway();
-$user = $userGateway->getByID($userId);
+$userRepository = new UserRepository();
+$user = $userRepository->getByID($userId);
 
 if ($user === false) {
     http_response_code(401);
@@ -53,7 +54,28 @@ if ($user === false) {
     exit;
 }
 
-require __DIR__ . "/tokens.php";
+$payload = [
+    "sub" => $user["id"],
+    "name" => $user["username"],
+    "exp" => time() + 300
+]; 
+
+// $accessToken = base64_encode(json_encode($payload));
+
+// JWT token
+$accessToken = $codec->encode($payload);
+
+// JWT refresh token
+$refreshTokenExpiry = time() + 432000;
+$refreshToken = $codec->encode([
+    "sub" => $user["id"],
+    "exp" => $refreshTokenExpiry
+]);
+
+echo json_encode([
+    "access_token" => $accessToken,
+    "refresh_token" => $refreshToken
+]);
 
 $refreshTokenGateway->delete($data["token"]);
 $refreshTokenGateway->create($refreshToken, $refreshTokenExpiry);
