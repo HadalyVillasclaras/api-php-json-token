@@ -4,14 +4,13 @@ namespace App\Task\Application;
 
 class DeleteTaskDTO
 {
-    private $userId;
-    private $taskId;
+    private int $userId;
+    private int $taskId;
 
     public function __construct(int $userId, int $taskId)
     {
         $this->userId = $userId;
         $this->taskId = $taskId;
-
     }
 
     public function getUserId(): int
