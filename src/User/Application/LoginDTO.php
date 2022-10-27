@@ -4,8 +4,8 @@ namespace App\User\Application;
 
 class LoginDTO 
 {
-    private $username;
-    private $password;
+    private string $username;
+    private string $password;
 
     public function __construct(
         string $username,
@@ -16,12 +16,12 @@ class LoginDTO
         $this->password = $password;
     }
 
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
 
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }
