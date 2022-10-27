@@ -37,7 +37,7 @@ class UserRepository implements UserRepositoryInterface
         echo "Thank you for registering. Your API key is ", $api_key;
     }
 
-    public function getByUsername(string $username)//: array | false
+    public function getByUsername(string $username) 
     {
         $sql = "SELECT *
                 FROM user
@@ -52,4 +52,38 @@ class UserRepository implements UserRepositoryInterface
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
+    public function getByAPIKey(string $key) 
+    {
+        $sql = "SELECT *
+                FROM user
+                WHERE api_key = :api_key";
+
+        $stmt = $this->connection->prepare($sql);
+
+        $stmt->bindValue(":api_key", $key, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getByID(int $id) 
+    {
+        $sql = "SELECT * 
+                FROM user
+                WHERE id = :id";
+
+        $stmt = $this->connection->prepare($sql);
+
+        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);        
+    }
+
+    public function update(int $userId)
+    {
+        
+    }
 }
