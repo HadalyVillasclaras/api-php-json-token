@@ -7,7 +7,7 @@ use App\User\Domain\UserRepositoryInterface;
 
 class RegisterService
 {
-    protected $userRepositoryInterface;
+    protected UserRepositoryInterface $userRepositoryInterface;
 
     public function __construct(UserRepositoryInterface $userRepositoryInterface)
     {
