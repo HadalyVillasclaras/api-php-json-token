@@ -81,8 +81,6 @@ class TaskRepository implements TaskRepositoryInterface
         return $this->connection->lastInsertId();
     }
 
-
-
     public function getByUserId(int $userId, string $taskId) /*: array| false*/
     {
         $sql = "SELECT *
@@ -104,8 +102,6 @@ class TaskRepository implements TaskRepositoryInterface
 
         return $data;
     }
-
-
 
     public function updateByUserId(int $userId, string $id, array $data): int
     {
