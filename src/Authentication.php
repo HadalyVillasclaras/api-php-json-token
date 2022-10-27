@@ -10,20 +10,20 @@ namespace App;
 
 use App\Exceptions\InvalidSignatureException;
 use App\Exceptions\TokenExpiredException;
+use App\User\Infrastructure\UserRepository;
 use Exception;
 
 class Authentication
 {
-    private UserGateway $userGateway;
     private JWTCodec $codec;
+    private UserRepository $userRepository;
 
     private int $userId;
 
-    public function __construct(/*private*/ UserGateway $userGateway,
-                                            JWTCodec $codec)
+    public function __construct()
     {
-        $this->userGateway = $userGateway;
-        $this->codec = $codec;
+        $this->userRepository = new UserRepository;
+        $this->codec = new JWTCodec;
     }
     
     public function authenticateAPIKey(): bool
@@ -36,7 +36,7 @@ class Authentication
 
         $apiKey = $_SERVER["HTTP_X_API_KEY"];
 
-        $user = $this->userGateway->getByAPIKey($apiKey);
+        $user = $this->userRepository->getByAPIKey($apiKey);
 
         if ($user === false) {
             http_response_code(401); 
