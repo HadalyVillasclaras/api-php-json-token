@@ -7,7 +7,7 @@ use Exception;
 
 class LoginService
 {
-    protected $userRepositoryInterface;
+    protected UserRepositoryInterface $userRepositoryInterface;
 
     public function __construct(UserRepositoryInterface $userRepositoryInterface)
     {
@@ -16,7 +16,6 @@ class LoginService
 
     public function execute(LoginDTO $loginDTO)
     {
-
         $username = $loginDTO->getUsername();
         $password = $loginDTO->getPassword();
 
@@ -36,17 +35,16 @@ class LoginService
 
         if ($user === false) {
             http_response_code(401);
-            echo json_encode(["message" => "Invalid authentication"]);
+            echo json_encode(["message" => "Invalid login credentials"]);
             exit;
         }
 
         if (!password_verify($password, $user["password_hash"])) {
             http_response_code(401);
-            echo json_encode(["message" => "Invalid authentication"]);
+            echo json_encode(["message" => "Invalid login credentials"]);
             exit;
         }
 
-        
- 
+        return $user;
     }
 }
