@@ -2,6 +2,7 @@
 
 namespace App\Task\Controller;
 
+use App\Authentication;
 use App\Task\Application\AddTaskDTO;
 use App\Task\Application\AddTaskService;
 use App\Task\Application\DeleteTaskDTO;
@@ -15,55 +16,18 @@ use App\Task\Infrastructure\TaskRepository;
 class TaskController
 {
     private $userId;
-    private $taskId;
 
-    public function __construct(/*private*/ int $userId)
+    public function __construct()
     {
-        $this->userId = $userId;
-    }
+        $authentication = new Authentication();
 
-    public function processRequest(string $method, ?string $taskId): void
-    {
-        $this->taskId = $taskId;
-
-        if ($this->taskId === null) {
-            if ($method == "POST") {
-
-                $this->addByUserId();
-                
-            } else {
-
-                $this->respondMethodNotAllowed("GET, POST");
-            }
-        } else {
-
-            $task = $this->getByUserId(5);
-
-            if ($task === false) {
-
-                $this->respondNotFound($this->taskId);
-                return;
-            }
-
-            switch ($method) {
-                case "GET":
-                    echo json_encode($task);
-                    break;
-
-                case "PATCH":
-                    $this->updateByUserId($this->taskId);
-                    break;
-
-                case "DELETE":
-                    $this->deleteByUserId($this->taskId);
-                    break;
-
-                default:
-                    $this->respondMethodNotAllowed("GET, PATCH, DELETE");
-            }
+        if (!$authentication->authenticateJwtToken()) {
+            exit;
         }
+
+        $this->userId = $authentication->getUserId();
     }
-    
+
     public function getAllByUserId()
     {
         $taskRepository = new TaskRepository();
@@ -108,8 +72,6 @@ class TaskController
 
         $addTaskService = new AddTaskService($taskRepository);
         $serviceResponse = $addTaskService->execute($addTaskRequest);
-
-        print_r($serviceResponse);
 
         // $errors = $this->getValidationErrors($data);
 
