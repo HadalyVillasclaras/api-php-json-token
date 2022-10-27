@@ -2,6 +2,8 @@
 
 namespace App\User\Application;
 
+use App\Shared\Domain\Exceptions\EmptyFieldException;
+
 class LoginDTO 
 {
     private string $username;
@@ -12,6 +14,14 @@ class LoginDTO
         string $password
     )
     {
+        if (empty($username)) {
+            throw new EmptyFieldException('username');
+        }
+
+        if (empty($password)) {
+            throw new EmptyFieldException('password');
+        }
+
         $this->username = $username;
         $this->password = $password;
     }
