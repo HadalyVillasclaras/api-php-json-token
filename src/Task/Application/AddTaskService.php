@@ -14,7 +14,7 @@ class AddTaskService
         $this->taskRepositoryInterface = $taskRepositoryInterface;
     }
 
-    public function execute(AddTaskDTO $addTaskDTO)
+    public function execute(AddTaskDTO $addTaskDTO): Task
     {
         $task = new Task(
             $addTaskDTO->getTaskName(),
