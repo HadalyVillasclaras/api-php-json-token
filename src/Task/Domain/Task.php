@@ -4,11 +4,11 @@ namespace App\Task\Domain;
 
 class Task 
 {
-    private $id;
-    private $taskName;
-    private $priority;
-    private $isCompleted;
-    private $userId;
+    private int $id;
+    private string $taskName;
+    private int $priority;
+    private bool $isCompleted;
+    private int $userId;
 
     public function __construct(
         string $taskName,
