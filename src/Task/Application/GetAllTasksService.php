@@ -13,7 +13,7 @@ class GetAllTasksService
         $this->taskRepositoryInterface = $taskRepositoryInterface;
     }
 
-    public function execute(GetAllTasksDTO $getAllTasksDTO)
+    public function execute(GetAllTasksDTO $getAllTasksDTO): array
     {
         $userId = $getAllTasksDTO->getUserId();
 
@@ -21,5 +21,4 @@ class GetAllTasksService
 
         return $tasks;
     }
-
 }
