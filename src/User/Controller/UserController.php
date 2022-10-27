@@ -21,52 +21,61 @@ class UserController
     {
         $userRepository = new UserRepository();
 
-        $data = (array) json_decode(file_get_contents("php://input"), true); 
+        try {
+            $data = (array) json_decode(file_get_contents("php://input"), true); 
 
-        $registerParams = [];
-        $registerParams['name'] = $data['name'];
-        $registerParams['email'] = $data['email'];
-        $registerParams['username'] = $data['username'];
-        $registerParams['password'] = $data['password'];
-        $registerParams['api_key'] = $data['api_key'];
-
-        $registerRequest = new RegisterDTO(
-            $registerParams['name'],
-            $registerParams['email'],
-            $registerParams['username'],
-            $registerParams['password'],
-            $registerParams['api_key']
-        );
-
-        $registerService = new RegisterService($userRepository);
-        $serviceResponse = $registerService->execute($registerRequest);
-
-        print_r($serviceResponse);
+            $registerParams = [];
+            $registerParams['name'] = $data['name'];
+            $registerParams['email'] = $data['email'];
+            $registerParams['username'] = $data['username'];
+            $registerParams['password'] = $data['password'];
+            $registerParams['api_key'] = $data['api_key'];
+    
+            $registerRequest = new RegisterDTO(
+                $registerParams['name'],
+                $registerParams['email'],
+                $registerParams['username'],
+                $registerParams['password'],
+                $registerParams['api_key']
+            );
+    
+            $registerService = new RegisterService($userRepository);
+            $serviceResponse = $registerService->execute($registerRequest);
+    
+            print_r($serviceResponse);
+        } catch (Exception $e) {
+            http_response_code($e->getCode());
+            echo json_encode(["message" => $e->getMessage()]);
+        }
     }
 
     public function login()
     {
         $userRepository = new UserRepository();
 
-        $data = (array) json_decode(file_get_contents("php://input"), true);
+        try {
+            $data = (array) json_decode(file_get_contents("php://input"), true);
        
-        $loginParams = [];
-        $loginParams['username'] = $data['username'];
-        $loginParams['password'] = $data['password'];
+            $loginParams = [];
+            $loginParams['username'] = $data['username'];
+            $loginParams['password'] = $data['password'];
+    
+            $loginRequest = new LoginDTO(
+                $loginParams['username'],
+                $loginParams['password']
+            );
+    
+            $loginService = new LoginService($userRepository);
+            $serviceResponse = $loginService->execute($loginRequest);
+            $user = $serviceResponse;
 
-        $loginRequest = new LoginDTO(
-            $loginParams['username'],
-            $loginParams['password']
-        );
+            $this->generateToken($user);
+            print json_encode(["message" => "logeado"]);
 
-        $loginService = new LoginService($userRepository);
-        $serviceResponse = $loginService->execute($loginRequest);
-
-        $user = $serviceResponse;
-
-        $this->generateToken($user);
-        echo "logeado";
-        exit;
+        } catch (Exception $e) {
+            http_response_code($e->getCode());
+            echo json_encode(["message" => $e->getMessage()]);
+        }
     }
 
     public function logout() 
@@ -157,5 +166,4 @@ class UserController
         $refreshTokenGateway = new RefreshTokenGateway();
         echo $refreshTokenGateway->deleteExpired(), "\n";
     }
-
 }
