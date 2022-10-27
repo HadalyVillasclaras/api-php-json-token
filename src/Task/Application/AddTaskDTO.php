@@ -16,6 +16,10 @@ class AddTaskDTO
         int $userId
     )
     {
+        if (empty($taskName)) {
+            throw new EmptyFieldException('taskName');
+        }
+        
         $this->taskName = $taskName;
         $this->priority = $priority;
         $this->isCompleted = $isCompleted;
