@@ -4,11 +4,11 @@ namespace App\User\Application;
 
 class RegisterDTO 
 {
-    private $name;
-    private $email;
-    private $username;
-    private $password;
-    private $apiKey;
+    private string $name;
+    private string $email;
+    private string $username;
+    private string $password;
+    private string $apiKey;
 
     public function __construct(
         string $name,
@@ -25,27 +25,27 @@ class RegisterDTO
         $this->apiKey = $apiKey;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
 
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }
 
-    public function getApiKey()
+    public function getApiKey(): string
     {
         return $this->apiKey;
     }
