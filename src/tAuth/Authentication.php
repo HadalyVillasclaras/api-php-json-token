@@ -6,10 +6,10 @@
  * - JWT token
 */
 
-namespace App;
+namespace App\Auth;
 
-use App\Exceptions\InvalidSignatureException;
-use App\Exceptions\TokenExpiredException;
+use App\Shared\Exceptions\InvalidSignatureException;
+use App\Shared\Exceptions\TokenExpiredException;
 use App\User\Infrastructure\UserRepository;
 use Exception;
 

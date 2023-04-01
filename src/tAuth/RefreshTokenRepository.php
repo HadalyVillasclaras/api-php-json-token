@@ -5,7 +5,7 @@ namespace App;
 use App\Shared\Infrastructure\Database\Database;
 use PDO;
 
-class RefreshTokenGateway
+class RefreshTokenRepository
 {
     private PDO $connection;
     private string $key;

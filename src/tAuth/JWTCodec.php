@@ -2,8 +2,8 @@
 
 namespace App;
 
-use App\Exceptions\InvalidSignatureException;
-use App\Exceptions\TokenExpiredException;
+use App\Shared\Exceptions\InvalidSignatureException;
+use App\Shared\Exceptions\TokenExpiredException;
 use InvalidArgumentException;
 
 class JWTCodec

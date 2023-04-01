@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\JWTCodec;
-use App\RefreshTokenGateway;
+use App\Auth\JWTCodec;
+use App\Auth\RefreshTokenGateway;
 use App\User\Infrastructure\UserRepository;
 
 require __DIR__ . "/bootstrap.php";
@@ -21,7 +21,6 @@ if (!array_key_exists("token", $data)) {
         echo json_encode(["message" => "missing token"]);
         exit;
 }
-
 
 $codec = new JWTCodec();
 
